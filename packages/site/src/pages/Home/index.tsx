@@ -90,6 +90,15 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    refreshDealInfo();
+  }, [snapState.fileList]);
+
+  useEffect(() => {
+    if (!dealInfo || Object.values(dealInfo).length === 0) return;
+    console.log({ dealInfo });
+  }, [dealInfo]);
+
+  const refreshDealInfo = async () => {
     if (!snapState.fileList) return;
     const cids = [...new Set(snapState.fileList.map(file => file.cid))];
     const dealInfo: Record<string, any> = {};
@@ -121,12 +130,7 @@ const Home: React.FC = () => {
         ]),
       ),
     ).then(() => setDealInfo({ ...dealInfo }));
-  }, [snapState.fileList]);
-
-  useEffect(() => {
-    if (!dealInfo || Object.values(dealInfo).length === 0) return;
-    console.log({ dealStatus: dealInfo });
-  }, [dealInfo]);
+  };
 
   const getRaasHealth = (cid: string) => {
     if (!dealInfo[cid]?.dealStatus) return NaN;
@@ -220,19 +224,6 @@ const Home: React.FC = () => {
                     fileName: file.name,
                     blob: file,
                   });
-                  const cid = res.Hash;
-                  try {
-                    await handleSubmitCidToContract(cid);
-                    await handleSubmitCidToRaasBackend(cid);
-                    Message.success("Upload success: " + file.name);
-                  } catch (e) {
-                    console.warn(e);
-                    Message.warning(
-                      "Upload success, but failed to submit to contract or raas backend: " +
-                        file.name +
-                        ". You may need to get some testnet Filecoin first.",
-                    );
-                  }
                   handleLoadUploads().catch(console.warn);
                   snapState.raasProvider
                     .getStorageSize()
@@ -336,9 +327,36 @@ const Home: React.FC = () => {
                         className='table-item'
                         style={{ color: getRaasHealthColor(file.cid) }}
                       >
-                        {getRaasHealth(file.cid)
-                          ? getRaasHealth(file.cid).toFixed(2) + "%"
-                          : "N/A"}
+                        {dealInfo[file.cid]?.dealStatus &&
+                          (getRaasHealth(file.cid)
+                            ? getRaasHealth(file.cid).toFixed(2) + "%"
+                            : "N/A")}
+                        {!dealInfo[file.cid]?.dealStatus && (
+                          <button
+                            className='btn'
+                            onClick={async e => {
+                              e.stopPropagation();
+                              try {
+                                await handleSubmitCidToContract(file.cid);
+                                await handleSubmitCidToRaasBackend(file.cid);
+                                Message.success(
+                                  "Success submit contract and raas to backend: " +
+                                    file.fileName,
+                                );
+                                refreshDealInfo();
+                              } catch (e) {
+                                console.warn(e);
+                                Message.error(
+                                  "Failed to submit to contract or raas backend: " +
+                                    file.fileName +
+                                    ". You may need to get some testnet Filecoin first.",
+                                );
+                              }
+                            }}
+                          >
+                            RaaS
+                          </button>
+                        )}
                       </div>
                       <div className='table-item buttons'>
                         <button

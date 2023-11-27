@@ -71,6 +71,7 @@ export const FileInfoModal = ({
 
   useEffect(() => {
     if (open) {
+      setDealStatus(undefined);
       setVisible(true);
       if (file) {
         handleQueryDealStatusByCid(file.cid).then(setDealStatus);
@@ -178,7 +179,9 @@ export const FileInfoModal = ({
                   className='extra-value'
                   data-unavailable={!dealStatus?.currentActiveDeals}
                 >
-                  {dealStatus?.currentActiveDeals?.length || "in progress"}
+                  {dealStatus?.currentActiveDeals
+                    ? dealStatus?.currentActiveDeals.length
+                    : "in progress"}
                 </div>
               </div>
               <div className='extra-item'>

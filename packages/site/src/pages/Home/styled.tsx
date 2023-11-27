@@ -213,6 +213,13 @@ export const FinderWrap = styled.div`
         color: #232325;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        .btn {
+          border-radius: 8px;
+          background-color: #4383f7;
+          color: #ffffff;
+          padding: 6px 18px;
+        }
       }
 
       .buttons {
