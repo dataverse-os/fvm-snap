@@ -52,15 +52,13 @@ const Home: React.FC = () => {
   const {
     snapState,
     handleLoadUploads,
-    handleDownloadFile,
     handleUploadFile,
     handleQueryDealStatusByCid,
-    handleSubmitCidToContract,
-    handleSubmitCidToRaasBackend,
     handleGetActiveDealsFromContract,
     handleGetAllDealsFromContract,
   } = useSnap();
   const navigate = useNavigate();
+  const raasProvider = snapState.raasProvider;
 
   const [fileInfoModalVisible, setFileInfoModalVisible] = useState(false);
   const [selectedFile, setSelectedFile] = useState<FileObject>();
@@ -80,13 +78,13 @@ const Home: React.FC = () => {
   const [fileUploading, setFileUploading] = useState(false);
 
   useEffect(() => {
-    if (!snapState.installedSnap || !snapState.raasProvider.isProviderSet) {
+    if (!snapState.installedSnap || !raasProvider.isProviderSet) {
       navigate("/");
       return;
     }
     handleLoadUploads().catch(console.warn);
-    snapState.raasProvider.signer.getAddress().then(setAddress);
-    snapState.raasProvider.getStorageSize().then(setStorageSize);
+    raasProvider.signer.getAddress().then(setAddress);
+    raasProvider.getStorageSize().then(setStorageSize);
   }, []);
 
   useEffect(() => {
@@ -98,12 +96,14 @@ const Home: React.FC = () => {
     console.log({ dealInfo });
   }, [dealInfo]);
 
-  const refreshDealInfo = async () => {
+  const refreshDealInfo = async (cid?: string) => {
     if (!snapState.fileList) return;
-    const cids = [...new Set(snapState.fileList.map(file => file.cid))];
-    const dealInfo: Record<string, any> = {};
+    const cids = cid
+      ? [cid]
+      : [...new Set(snapState.fileList.map(file => file.cid))];
+    const _dealInfo: Record<string, any> = dealInfo;
     cids.forEach(cid => {
-      dealInfo[cid] = {
+      _dealInfo[cid] = {
         dealStatus: null,
         activeDeals: null,
         allDeals: null,
@@ -114,40 +114,22 @@ const Home: React.FC = () => {
         Promise.allSettled([
           handleQueryDealStatusByCid(cid)
             .then(res => {
-              dealInfo[cid].dealStatus = res;
+              _dealInfo[cid].dealStatus = res;
             })
             .catch(console.warn),
           handleGetActiveDealsFromContract(cid)
             .then(res => {
-              dealInfo[cid].activeDeals = res;
+              _dealInfo[cid].activeDeals = res;
             })
             .catch(console.warn),
           handleGetAllDealsFromContract(cid)
             .then(res => {
-              dealInfo[cid].allDeals = res;
+              _dealInfo[cid].allDeals = res;
             })
             .catch(console.warn),
         ]),
       ),
-    ).then(() => setDealInfo({ ...dealInfo }));
-  };
-
-  const getRaasHealth = (cid: string) => {
-    if (!dealInfo[cid]?.dealStatus) return NaN;
-    const health =
-      (dealInfo[cid].dealStatus.currentActiveDeals.length /
-        (dealInfo[cid].dealStatus.dealInfos?.dealID.length ||
-          dealInfo[cid].dealStatus.currentActiveDeals.length)) *
-      100;
-    return health > 100 ? 100 : health;
-  };
-
-  const getRaasHealthColor = (cid: string) => {
-    const health = getRaasHealth(cid);
-    if (Number.isNaN(health)) return "#5C5C5C";
-    if (health >= 100) return "#33A754";
-    if (health >= 60) return "#FFC107";
-    return "#E64930";
+    ).then(() => setDealInfo({ ..._dealInfo }));
   };
 
   return (
@@ -225,10 +207,11 @@ const Home: React.FC = () => {
                     blob: file,
                   });
                   handleLoadUploads().catch(console.warn);
-                  snapState.raasProvider
+                  raasProvider
                     .getStorageSize()
                     .then(setStorageSize)
                     .catch(console.warn);
+                  Message.success("Upload success: " + file.name);
                   onSuccess(res);
                 } catch (e) {
                   Message.error("Upload failed: " + file.name);
@@ -306,99 +289,20 @@ const Home: React.FC = () => {
                       .toLowerCase()
                       .includes(searchContent.toLowerCase() || ""),
                 )
-                .map(file => {
-                  return (
-                    <div
-                      key={file.id}
-                      className='table-row'
-                      onClick={() => {
-                        setSelectedFile(file);
-                        setFileInfoModalVisible(true);
-                      }}
-                    >
-                      <div className='table-item'>{file.fileName}</div>
-                      <div className='table-item'>
-                        {normalizeSize(Number.parseInt(file.fileSizeInBytes))}
-                      </div>
-                      <div className='table-item'>
-                        {parseTime(file.lastUpdate, "{d}-{m}-{y}")}
-                      </div>
-                      <div
-                        className='table-item'
-                        style={{ color: getRaasHealthColor(file.cid) }}
-                      >
-                        {dealInfo[file.cid]?.dealStatus &&
-                          (getRaasHealth(file.cid)
-                            ? getRaasHealth(file.cid).toFixed(2) + "%"
-                            : "N/A")}
-                        {!dealInfo[file.cid]?.dealStatus && (
-                          <button
-                            className='btn'
-                            onClick={async e => {
-                              e.stopPropagation();
-                              try {
-                                await handleSubmitCidToContract(file.cid);
-                                await handleSubmitCidToRaasBackend(file.cid);
-                                Message.success(
-                                  "Success submit contract and raas to backend: " +
-                                    file.fileName,
-                                );
-                                refreshDealInfo();
-                              } catch (e) {
-                                console.warn(e);
-                                Message.error(
-                                  "Failed to submit to contract or raas backend: " +
-                                    file.fileName +
-                                    ". You may need to get some testnet Filecoin first.",
-                                );
-                              }
-                            }}
-                          >
-                            RaaS
-                          </button>
-                        )}
-                      </div>
-                      <div className='table-item buttons'>
-                        <button
-                          onClick={async e => {
-                            e.stopPropagation();
-                            const content = await handleDownloadFile(file.cid);
-                            const blob = new Blob([content], {
-                              type: file.mimeType,
-                            });
-                            const url = window.URL.createObjectURL(blob);
-                            console.log({ content, blob, url });
-                            const link = document.createElement("a");
-                            link.href = url;
-                            link.download = file.fileName;
-                            link.click();
-                          }}
-                        >
-                          <img src={FileDownloadIconSvg} />
-                        </button>
-                        <button
-                          onClick={async e => {
-                            e.stopPropagation();
-                            try {
-                              // copy download link to clipboard
-                              await navigator.clipboard.writeText(
-                                `https://gateway.lighthouse.storage/ipfs/${file.cid}`,
-                              );
-                              Message.success(
-                                "File link is copied to clipboard",
-                              );
-                            } catch (e) {
-                              console.warn(e);
-                              Message.error("Failed to copy file link");
-                            }
-                          }}
-                        >
-                          <img src={FileShareIconSvg} />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                .map(file => (
+                  <FileInfoItem
+                    key={file.id}
+                    file={file}
+                    dealInfo={dealInfo[file.cid]}
+                    onClick={file => {
+                      setSelectedFile(file);
+                      setFileInfoModalVisible(true);
+                    }}
+                    onSubmitTask={file => {
+                      setTimeout(() => refreshDealInfo(file.cid), 30 * 1000);
+                    }}
+                  />
+                ))}
             </div>
           </div>
         </FinderWrap>
@@ -409,6 +313,135 @@ const Home: React.FC = () => {
         />
       </MainWrap>
     </PageWrapper>
+  );
+};
+
+const FileInfoItem = ({
+  file,
+  dealInfo,
+  onClick,
+  onSubmitTask,
+}: {
+  file: FileObject;
+  dealInfo?: {
+    dealStatus: any;
+    activeDeals: any;
+    allDeals: any;
+  };
+  onClick?: (file: FileObject) => void;
+  onSubmitTask?: (file: FileObject) => void;
+}) => {
+  const {
+    handleDownloadFile,
+    handleSubmitCidToContract,
+    handleSubmitCidToRaasBackend,
+  } = useSnap();
+
+  const [isSubmittingRaas, setIsSubmittingRaas] = useState(false);
+  const [isSubmittedRaas, setIsSubmittedRaas] = useState(false);
+
+  const getRaasHealth = () => {
+    if (!dealInfo?.dealStatus) return NaN;
+    const health =
+      (dealInfo.dealStatus.currentActiveDeals.length /
+        (dealInfo.dealStatus.dealInfos?.dealID.length ||
+          dealInfo.dealStatus.currentActiveDeals.length)) *
+      100;
+    return health > 100 ? 100 : health;
+  };
+
+  const getRaasHealthColor = () => {
+    const health = getRaasHealth();
+    if (Number.isNaN(health)) return "#5C5C5C";
+    if (health >= 100) return "#33A754";
+    if (health >= 60) return "#FFC107";
+    return "#E64930";
+  };
+
+  return (
+    <div key={file.id} className='table-row' onClick={() => onClick?.(file)}>
+      <div className='table-item'>{file.fileName}</div>
+      <div className='table-item'>
+        {normalizeSize(Number.parseInt(file.fileSizeInBytes))}
+      </div>
+      <div className='table-item'>
+        {parseTime(file.lastUpdate, "{d}-{m}-{y}")}
+      </div>
+      <div className='table-item' style={{ color: getRaasHealthColor() }}>
+        {(dealInfo?.dealStatus || isSubmittedRaas) &&
+          (getRaasHealth() ? getRaasHealth().toFixed(2) + "%" : "N/A")}
+        {!(dealInfo?.dealStatus || isSubmittedRaas) && (
+          <button
+            className='btn'
+            onClick={async e => {
+              e.stopPropagation();
+              try {
+                setIsSubmittingRaas(true);
+                await handleSubmitCidToContract(file.cid);
+                await handleSubmitCidToRaasBackend(file.cid);
+                Message.success(
+                  "Success submit contract and raas to backend: " +
+                    file.fileName,
+                );
+                setIsSubmittedRaas(true);
+                onSubmitTask?.(file);
+              } catch (e) {
+                console.warn(e);
+                Message.error(
+                  "Failed to submit to contract or raas backend: " +
+                    file.fileName +
+                    ". You may need to get some testnet Filecoin first.",
+                );
+              } finally {
+                setIsSubmittingRaas(false);
+              }
+            }}
+          >
+            {isSubmittingRaas ? (
+              <img src={LoadingSvg} style={{ height: "1.4rem" }} />
+            ) : (
+              "RaaS"
+            )}
+          </button>
+        )}
+      </div>
+      <div className='table-item buttons'>
+        <button
+          onClick={async e => {
+            e.stopPropagation();
+            const content = await handleDownloadFile(file.cid);
+            const blob = new Blob([content], {
+              type: file.mimeType,
+            });
+            const url = window.URL.createObjectURL(blob);
+            console.log({ content, blob, url });
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = file.fileName;
+            link.click();
+          }}
+        >
+          <img src={FileDownloadIconSvg} />
+        </button>
+        <button
+          onClick={async e => {
+            e.stopPropagation();
+            try {
+              // copy download link to clipboard
+              await navigator.clipboard.writeText(
+                `https://gateway.lighthouse.storage/ipfs/${file.cid}`,
+              );
+              Message.success("File link is copied to clipboard");
+            } catch (e) {
+              console.warn(e);
+              Message.error("Failed to copy file link");
+            }
+          }}
+        >
+          <img src={FileShareIconSvg} />
+        </button>
+      </div>
+    </div>
   );
 };
 

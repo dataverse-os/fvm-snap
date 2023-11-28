@@ -204,6 +204,8 @@ export const FinderWrap = styled.div`
       border-bottom: 1px solid #d9d9d9;
 
       .table-item {
+        display: flex;
+        align-items: center;
         font-family: Inter-Medium;
         font-size: 14px;
         font-weight: 500;
@@ -219,6 +221,9 @@ export const FinderWrap = styled.div`
           background-color: #4383f7;
           color: #ffffff;
           padding: 6px 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
 
@@ -247,6 +252,8 @@ export const FinderWrap = styled.div`
       background: #ffffff;
 
       .table-item {
+        display: flex;
+        align-items: center;
         font-family: Inter-Medium;
         font-size: 16px;
         font-weight: 500;
@@ -274,16 +281,23 @@ export const FinderWrap = styled.div`
         flex: 0 1 15%;
       }
       .table-item:nth-child(5) {
+        justify-content: flex-end !important;
         flex: 0 1 10%;
         min-width: 120px;
       }
     }
 
+    .table-header {
+      .table-item:not(:nth-child(1)) {
+        justify-content: center;
+      }
+    }
     .table-row {
       .table-item:nth-child(1) {
         padding-left: 20px;
       }
       .table-item:not(:nth-child(1)) {
+        justify-content: center;
         color: #5c5c5c;
       }
     }
