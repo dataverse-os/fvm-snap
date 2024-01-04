@@ -1,10 +1,12 @@
-import { useContext } from 'react';
-import styled, { useTheme } from 'styled-components';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { connectSnap, getThemePreference, getSnap } from '../utils';
-import { HeaderButtons } from './Buttons';
-import { SnapLogo } from './SnapLogo';
-import { Toggle } from './Toggle';
+import { useContext } from "react";
+
+import styled, { useTheme } from "styled-components";
+
+import { HeaderButtons } from "./Buttons";
+import { SnapLogo } from "./SnapLogo";
+import { Toggle } from "./Toggle";
+import { MetamaskActions, MetaMaskContext } from "../hooks";
+import { connectSnap, getThemePreference, getSnap } from "../utils";
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -12,11 +14,11 @@ const HeaderWrapper = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 2.4rem;
-  border-bottom: 1px solid ${(props) => props.theme.colors.border.default};
+  border-bottom: 1px solid ${props => props.theme.colors.border.default};
 `;
 
 const Title = styled.p`
-  font-size: ${(props) => props.theme.fontSizes.title};
+  font-size: ${props => props.theme.fontSizes.title};
   font-weight: bold;
   margin: 0;
   margin-left: 1.2rem;

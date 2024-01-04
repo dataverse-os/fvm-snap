@@ -1,8 +1,31 @@
-import React, { useContext, useState } from 'react';
-import styled from 'styled-components';
-import { ethers, Wallet } from 'ethers';
-import { ExternalProvider } from '@ethersproject/providers/src.ts/web3-provider';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
+import React, { useContext, useState } from "react";
+
+import { ExternalProvider } from "@ethersproject/providers/src.ts/web3-provider";
+import { ethers, Wallet } from "ethers";
+import styled from "styled-components";
+
+import {
+  ConnectButton,
+  InstallFlaskButton,
+  ReconnectButton,
+  SendHelloButton,
+  Card,
+  UploadButton,
+  LoadAllUploadsButton,
+  SubmitCidToContractButton,
+  SubmitTaskToRaasBackendButton,
+  QueryProofByCidButton,
+  QueryDealStatusByCidButton,
+  GetAllDealsFromContractButton,
+  GetActiveDealsFromContractButton,
+  GetExpiringDealsFromContractButton,
+} from "../components";
+import FileDownloader from "../components/Download";
+import FileList, { FileObject } from "../components/Filelist";
+import DisplayInputComponent from "../components/Input";
+import FileUploadComponent from "../components/Upload";
+import { defaultSnapOrigin } from "../config";
+import { MetamaskActions, MetaMaskContext } from "../hooks";
 import {
   connectSnap,
   download,
@@ -19,28 +42,7 @@ import {
   submitToContract,
   submitToRaasBackend,
   uploadFile,
-} from '../utils';
-import {
-  ConnectButton,
-  InstallFlaskButton,
-  ReconnectButton,
-  SendHelloButton,
-  Card,
-  UploadButton,
-  LoadAllUploadsButton,
-  SubmitCidToContractButton,
-  SubmitTaskToRaasBackendButton,
-  QueryProofByCidButton,
-  QueryDealStatusByCidButton,
-  GetAllDealsFromContractButton,
-  GetActiveDealsFromContractButton,
-  GetExpiringDealsFromContractButton,
-} from '../components';
-import { defaultSnapOrigin } from '../config';
-import FileUploadComponent from '../components/Upload';
-import DisplayInputComponent from '../components/Input';
-import FileDownloader from '../components/Download';
-import FileList, { FileObject } from '../components/Filelist';
+} from "../utils";
 
 const Container = styled.div`
   display: flex;
@@ -65,7 +67,7 @@ const Heading = styled.h1`
 `;
 
 const Span = styled.span`
-  color: ${(props) => props.theme.colors.primary.default};
+  color: ${props => props.theme.colors.primary.default};
 `;
 
 const Subtitle = styled.p`
@@ -176,7 +178,7 @@ const Index = () => {
   };
 
   const handleDownloadClick = async () => {
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     try {
       await download(cid);
     } catch (e) {
@@ -199,7 +201,7 @@ const Index = () => {
 
   const handleSubmitCidToContract = async (/* cid: string*/) => {
     // todo:
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     try {
       await submitToContract(signer as Wallet, cid);
     } catch (e) {
@@ -209,7 +211,7 @@ const Index = () => {
   };
 
   const handleSubmitCidToRaasBackend = async (/* cid: string*/) => {
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     const requestReceivedTime = new Date();
     const endDate = requestReceivedTime.setMonth(
       requestReceivedTime.getMonth() + 1,
@@ -232,10 +234,10 @@ const Index = () => {
   };
 
   const handleQueryProofByCid = async (/* cid: string*/) => {
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     try {
       const podsi = await getProof(cid);
-      console.log('podsi: ', podsi);
+      console.log("podsi: ", podsi);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -243,10 +245,10 @@ const Index = () => {
   };
 
   const handleQueryDealStatusByCid = async (/* cid: string*/) => {
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     try {
       const podsi = await getDealStatusByCid(cid);
-      console.log('podsi: ', podsi);
+      console.log("podsi: ", podsi);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -254,10 +256,10 @@ const Index = () => {
   };
 
   const handleGetAllDealsFromContract = async (/* cid: string*/) => {
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     try {
       const res = await getAllDeals(signer as Wallet, cid);
-      console.log('res: ', res);
+      console.log("res: ", res);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -265,10 +267,10 @@ const Index = () => {
   };
 
   const handleGetActiveDealsFromContract = async (/* cid: string*/) => {
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     try {
       const res = await getAllDeals(signer as Wallet, cid);
-      console.log('res: ', res);
+      console.log("res: ", res);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -276,10 +278,10 @@ const Index = () => {
   };
 
   const handleGetExpiringDealsFromContract = async (/* cid: string*/) => {
-    const cid = 'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ';
+    const cid = "Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ";
     try {
       const res = await getExpiringDeals(signer as Wallet, cid, 4);
-      console.log('res: ', res);
+      console.log("res: ", res);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -303,9 +305,9 @@ const Index = () => {
         {!isMetaMaskReady && (
           <Card
             content={{
-              title: 'Install',
+              title: "Install",
               description:
-                'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
+                "Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.",
               button: <InstallFlaskButton />,
             }}
             fullWidth
@@ -314,9 +316,9 @@ const Index = () => {
         {!state.installedSnap && (
           <Card
             content={{
-              title: 'Connect',
+              title: "Connect",
               description:
-                'Get started by connecting to and installing the example snap.',
+                "Get started by connecting to and installing the example snap.",
               button: (
                 <ConnectButton
                   onClick={handleConnectClick}
@@ -330,9 +332,9 @@ const Index = () => {
         {shouldDisplayReconnectButton(state.installedSnap) && (
           <Card
             content={{
-              title: 'Reconnect',
+              title: "Reconnect",
               description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
+                "While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.",
               button: (
                 <ReconnectButton
                   onClick={handleConnectClick}
@@ -345,8 +347,8 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'UploadFile',
-            description: 'Upload file to lighthouse',
+            title: "UploadFile",
+            description: "Upload file to lighthouse",
           }}
           disabled={!state.installedSnap}
           fullWidth={
@@ -359,8 +361,8 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'DownloadFile',
-            description: 'Download file from lighthouse',
+            title: "DownloadFile",
+            description: "Download file from lighthouse",
             // button: (
             //   <DownloadButton
             //     onClick={handleDownloadClick}
@@ -376,15 +378,15 @@ const Index = () => {
           }
           input={
             <FileDownloader
-              cid={'Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ'}
+              cid={"Qmcdx5n36geM79Aghu3x1ov1VhuX1LHdsu82Xeh76TspxQ"}
             />
           }
         />
 
         <Card
           content={{
-            title: 'LoadAllUploads',
-            description: 'Load all files upload to lighthouse',
+            title: "LoadAllUploads",
+            description: "Load all files upload to lighthouse",
             button: (
               <LoadAllUploadsButton
                 onClick={handleLoadUploadsClick}
@@ -401,7 +403,7 @@ const Index = () => {
           }
         />
         <ul>
-          {fileList.map((file) => (
+          {fileList.map(file => (
             <li key={file.id}>
               <p>File Name: {file.fileName}</p>
               <p>File Size: {file.fileSizeInBytes} bytes</p>
@@ -418,9 +420,9 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'SubmitTaskToContract',
+            title: "SubmitTaskToContract",
             description:
-              'Submit cid to raas aggregator contract: QmZTVrPFStb9hKi5WLxa2FKU9FAYSwnw9Ufg2uCiFgvLfp',
+              "Submit cid to raas aggregator contract: QmZTVrPFStb9hKi5WLxa2FKU9FAYSwnw9Ufg2uCiFgvLfp",
             button: (
               <SubmitCidToContractButton
                 onClick={handleSubmitCidToContract}
@@ -438,9 +440,9 @@ const Index = () => {
         />
         <Card
           content={{
-            title: 'SubmitTaskToRaasBackend',
+            title: "SubmitTaskToRaasBackend",
             description:
-              'Submit cid to raas backend: QmZTVrPFStb9hKi5WLxa2FKU9FAYSwnw9Ufg2uCiFgvLfp',
+              "Submit cid to raas backend: QmZTVrPFStb9hKi5WLxa2FKU9FAYSwnw9Ufg2uCiFgvLfp",
             button: (
               <SubmitTaskToRaasBackendButton
                 onClick={handleSubmitCidToRaasBackend}
@@ -458,8 +460,8 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'GetProofByCid',
-            description: 'Query proof from raas backend by cid',
+            title: "GetProofByCid",
+            description: "Query proof from raas backend by cid",
             button: (
               <QueryProofByCidButton
                 onClick={handleQueryProofByCid}
@@ -477,8 +479,8 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'GetDealStatusByCid',
-            description: 'Query deal status by cid',
+            title: "GetDealStatusByCid",
+            description: "Query deal status by cid",
             button: (
               <QueryDealStatusByCidButton
                 onClick={handleQueryDealStatusByCid}
@@ -496,8 +498,8 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'GetAllDealsFromContract',
-            description: 'Get all deals by querying aggregator contract',
+            title: "GetAllDealsFromContract",
+            description: "Get all deals by querying aggregator contract",
             button: (
               <GetAllDealsFromContractButton
                 onClick={handleGetAllDealsFromContract}
@@ -515,8 +517,8 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'GetActiveDealsFromContract',
-            description: 'Get active deals by querying aggregator contract',
+            title: "GetActiveDealsFromContract",
+            description: "Get active deals by querying aggregator contract",
             button: (
               <GetActiveDealsFromContractButton
                 onClick={handleGetExpiringDealsFromContract}
@@ -534,8 +536,8 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'GetExpiringDealsFromContract',
-            description: 'Get expiring deals by querying aggregator contract',
+            title: "GetExpiringDealsFromContract",
+            description: "Get expiring deals by querying aggregator contract",
             button: (
               <GetExpiringDealsFromContractButton
                 onClick={handleGetActiveDealsFromContract}
@@ -553,7 +555,7 @@ const Index = () => {
 
         <Notice>
           <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
+            Please note that the <b>snap.manifest.json</b> and{" "}
             <b>package.json</b> must be located in the server root directory and
             the bundle must be hosted at the location specified by the location
             field.

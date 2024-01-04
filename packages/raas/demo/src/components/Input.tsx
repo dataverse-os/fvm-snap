@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const DisplayInputComponent: React.FC = () => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -9,7 +9,7 @@ const DisplayInputComponent: React.FC = () => {
 
   return (
     <div>
-      <input type="text" value={inputValue} onChange={handleInputChange} />
+      <input type='text' value={inputValue} onChange={handleInputChange} />
       <p>{inputValue}</p>
     </div>
   );

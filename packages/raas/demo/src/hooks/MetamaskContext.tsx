@@ -5,9 +5,10 @@ import {
   Reducer,
   useEffect,
   useReducer,
-} from 'react';
-import { Snap } from '../types';
-import { detectSnaps, getSnap, isFlask } from '../utils';
+} from "react";
+
+import { Snap } from "../types";
+import { detectSnaps, getSnap, isFlask } from "../utils";
 
 export type MetamaskState = {
   snapsDetected: boolean;
@@ -33,10 +34,10 @@ export const MetaMaskContext = createContext<
 ]);
 
 export enum MetamaskActions {
-  SetInstalled = 'SetInstalled',
-  SetSnapsDetected = 'SetSnapsDetected',
-  SetError = 'SetError',
-  SetIsFlask = 'SetIsFlask',
+  SetInstalled = "SetInstalled",
+  SetSnapsDetected = "SetSnapsDetected",
+  SetError = "SetError",
+  SetIsFlask = "SetIsFlask",
 }
 
 const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
@@ -75,7 +76,7 @@ const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
  * @returns JSX.
  */
 export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return <>{children}</>;
   }
 

@@ -1,7 +1,8 @@
-import styled, { useTheme } from 'styled-components';
-import { ReactComponent as MetaMaskFox } from '../assets/metamask_fox.svg';
-import { MetaMask } from './MetaMask';
-import { PoweredBy } from './PoweredBy';
+import styled, { useTheme } from "styled-components";
+
+import { MetaMask } from "./MetaMask";
+import { PoweredBy } from "./PoweredBy";
+import { ReactComponent as MetaMaskFox } from "../assets/metamask_fox.svg";
 
 const FooterWrapper = styled.footer`
   display: flex;
@@ -10,7 +11,7 @@ const FooterWrapper = styled.footer`
   justify-content: center;
   padding-top: 2.4rem;
   padding-bottom: 2.4rem;
-  border-top: 1px solid ${(props) => props.theme.colors.border.default};
+  border-top: 1px solid ${props => props.theme.colors.border.default};
 `;
 
 const PoweredByButton = styled.a`
@@ -35,7 +36,7 @@ export const Footer = () => {
 
   return (
     <FooterWrapper>
-      <PoweredByButton href="https://docs.metamask.io/" target="_blank">
+      <PoweredByButton href='https://docs.metamask.io/' target='_blank'>
         <MetaMaskFox />
         <PoweredByContainer>
           <PoweredBy color={theme.colors.text.muted} />

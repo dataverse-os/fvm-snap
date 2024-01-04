@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
 export type FileObject = {
   publicKey: string;
@@ -21,7 +21,7 @@ type FileListProps = {
 const FileList: FC<FileListProps> = ({ files }) => {
   return (
     <ul>
-      {files.map((file) => (
+      {files.map(file => (
         <li key={file.id}>
           <p>File Name: {file.fileName}</p>
           <p>File Size: {file.fileSizeInBytes} bytes</p>

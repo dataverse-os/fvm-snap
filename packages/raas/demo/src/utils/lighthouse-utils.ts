@@ -1,22 +1,23 @@
 // import * as fs from 'fs';
 // import { ReadStream } from 'fs';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import axios from 'axios';
+import lighthouse from "@lighthouse-web3/sdk";
+import { lighthouseConfig } from "@lighthouse-web3/sdk/dist/lighthouse.config";
+import axios from "axios";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import lighthouse from '@lighthouse-web3/sdk';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ethers, Wallet } from 'ethers';
+import { ethers, Wallet } from "ethers";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { lighthouseConfig } from '@lighthouse-web3/sdk/dist/lighthouse.config';
-import { dealStatusABI, lighthouseSmartContractAddress } from './constants';
-import { RaasTask, SubmitOutput, UploadInput, UploadOutput } from './types';
+
+import { dealStatusABI, lighthouseSmartContractAddress } from "./constants";
+import { RaasTask, SubmitOutput, UploadInput, UploadOutput } from "./types";
 
 // eslint-disable-next-line consistent-return
 export const download = async (cid: string) => {
   const lighthouseDealDownloadEndpoint =
-    'https://gateway.lighthouse.storage/ipfs/';
+    "https://gateway.lighthouse.storage/ipfs/";
   const response = await axios({
-    method: 'GET',
+    method: "GET",
     url: `${lighthouseDealDownloadEndpoint}${cid}`,
     // responseType: 'blob',
   });
@@ -42,9 +43,9 @@ export const getLighthouseApiKey = async (signer: Wallet) => {
 
 export const getAuthToken = async (signer: Wallet) => {
   const apiKey = await getLighthouseApiKey(signer);
-  console.log('getAuthToken::apikey ', apiKey);
+  console.log("getAuthToken::apikey ", apiKey);
   const response = await lighthouse.dataDepotAuth(apiKey);
-  console.log('getAuthToken::authToken: ', response.data.access_token);
+  console.log("getAuthToken::authToken: ", response.data.access_token);
   return response.data.access_token;
 };
 
@@ -65,9 +66,9 @@ export const getAuthToken = async (signer: Wallet) => {
 
 export const getUploads = async (apiKey: string) => {
   const res = await lighthouse.getUploads(apiKey);
-  console.log('getUploads: ', res);
+  console.log("getUploads: ", res);
   if (res.data.fileList.length > 0) {
-    res.data.fileList.forEach((item) => {
+    res.data.fileList.forEach(item => {
       console.log(item);
     });
     return res.data.fileList;
@@ -88,7 +89,7 @@ export const submitCidToContract = async (signer: Wallet, cid: string) => {
       const r = await tx.wait();
       const txHash = r.transactionHash;
       r.events.forEach((e: any) => {
-        if (e.event === 'SubmitAggregatorRequest') {
+        if (e.event === "SubmitAggregatorRequest") {
           console.log(
             `SubmitAggregatorRequest:
             id     : ${e.args.id}
@@ -109,10 +110,10 @@ export const submitCidToContract = async (signer: Wallet, cid: string) => {
 export const submitTaskToRaas = async (signer: Wallet, raasTask: RaasTask) => {
   const formData = new FormData();
 
-  formData.append('cid', raasTask.cid);
-  formData.append('endDate', raasTask.endDate.toString());
-  formData.append('replicationTarget', raasTask.replicationTarget.toString());
-  formData.append('epochs', raasTask.epochs.toString());
+  formData.append("cid", raasTask.cid);
+  formData.append("endDate", raasTask.endDate.toString());
+  formData.append("replicationTarget", raasTask.replicationTarget.toString());
+  formData.append("epochs", raasTask.epochs.toString());
 
   const response = await axios.post(
     `https://calibration.lighthouse.storage/api/register_job`,
@@ -129,7 +130,7 @@ export const uploadToLightHouse = async (signer: Wallet, file: UploadInput) => {
 
     // Upload file
     const formData = new FormData();
-    formData.append('file', file.blob, file.fileName);
+    formData.append("file", file.blob, file.fileName);
     // eslint-disable-next-line symbol-description
     const boundary = Symbol();
 
@@ -138,10 +139,10 @@ export const uploadToLightHouse = async (signer: Wallet, file: UploadInput) => {
       maxContentLength: Infinity, // this is needed to prevent axios from erroring out with large directories
       maxBodyLength: Infinity,
       headers: {
-        'Content-type': `multipart/form-data; boundary= ${boundary.toString()}`,
+        "Content-type": `multipart/form-data; boundary= ${boundary.toString()}`,
         Encryption: `${false}`,
         Authorization: token,
-        'X-Deal-Parameter': 'null',
+        "X-Deal-Parameter": "null",
       },
     });
 
@@ -180,7 +181,7 @@ export const getLatestUploadedFileStatus = async (
   signer: Wallet,
 ): Promise<UploadOutput> => {
   const authToken = await getAuthToken(signer);
-  console.log('authToken: ', authToken);
+  console.log("authToken: ", authToken);
   // query uploaded file detail
   const viewCar = await lighthouse.viewCarFiles(1, authToken);
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -201,12 +202,12 @@ const sortCarFiles = (carInfos: any) => {
   };
 
   carInfos.sort(sortByCreatedAt);
-  console.log('sorted');
+  console.log("sorted");
   console.log(carInfos);
 };
 
 export const getProof = async (cid: string) => {
-  console.log('cid: ', cid);
+  console.log("cid: ", cid);
   const podsi = await axios.get(
     `https://api.lighthouse.storage/api/lighthouse/get_proof?cid=${cid}&network=testnet`,
   );
@@ -215,7 +216,7 @@ export const getProof = async (cid: string) => {
 
 export const getDealStatusByCid = async (cid: string) => {
   const config = {
-    method: 'get',
+    method: "get",
     url: `https://calibration.lighthouse.storage/api/deal_status?cid=${cid}`,
   };
 

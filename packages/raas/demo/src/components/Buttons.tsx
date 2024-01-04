@@ -1,21 +1,23 @@
-import { ComponentProps } from 'react';
-import styled from 'styled-components';
-import { MetamaskState } from '../hooks';
+import { ComponentProps } from "react";
+
+import styled from "styled-components";
+
+import { ReactComponent as FlaskFox } from "../assets/flask_fox.svg";
+import { MetamaskState } from "../hooks";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
-import { shouldDisplayReconnectButton } from '../utils';
+import { shouldDisplayReconnectButton } from "../utils";
 
 const Link = styled.a`
   display: flex;
   align-self: flex-start;
   align-items: center;
   justify-content: center;
-  font-size: ${(props) => props.theme.fontSizes.small};
-  border-radius: ${(props) => props.theme.radii.button};
-  border: 1px solid ${(props) => props.theme.colors.background.inverse};
-  background-color: ${(props) => props.theme.colors.background.inverse};
-  color: ${(props) => props.theme.colors.text.inverse};
+  font-size: ${props => props.theme.fontSizes.small};
+  border-radius: ${props => props.theme.radii.button};
+  border: 1px solid ${props => props.theme.colors.background.inverse};
+  background-color: ${props => props.theme.colors.background.inverse};
+  color: ${props => props.theme.colors.text.inverse};
   text-decoration: none;
   font-weight: bold;
   padding: 1rem;
@@ -24,8 +26,8 @@ const Link = styled.a`
 
   &:hover {
     background-color: transparent;
-    border: 1px solid ${(props) => props.theme.colors.background.inverse};
-    color: ${(props) => props.theme.colors.text.default};
+    border: 1px solid ${props => props.theme.colors.background.inverse};
+    color: ${props => props.theme.colors.text.default};
   }
 
   ${({ theme }) => theme.mediaQueries.small} {
@@ -54,17 +56,17 @@ const ConnectedContainer = styled.div`
   align-self: flex-start;
   align-items: center;
   justify-content: center;
-  font-size: ${(props) => props.theme.fontSizes.small};
-  border-radius: ${(props) => props.theme.radii.button};
-  border: 1px solid ${(props) => props.theme.colors.background.inverse};
-  background-color: ${(props) => props.theme.colors.background.inverse};
-  color: ${(props) => props.theme.colors.text.inverse};
+  font-size: ${props => props.theme.fontSizes.small};
+  border-radius: ${props => props.theme.radii.button};
+  border: 1px solid ${props => props.theme.colors.background.inverse};
+  background-color: ${props => props.theme.colors.background.inverse};
+  color: ${props => props.theme.colors.text.inverse};
   font-weight: bold;
   padding: 1.2rem;
 `;
 
 const ConnectedIndicator = styled.div`
-  content: ' ';
+  content: " ";
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -72,7 +74,7 @@ const ConnectedIndicator = styled.div`
 `;
 
 export const InstallFlaskButton = () => (
-  <Link href="https://metamask.io/flask/" target="_blank">
+  <Link href='https://metamask.io/flask/' target='_blank'>
     <FlaskFox />
     <ButtonText>Install MetaMask Flask</ButtonText>
   </Link>

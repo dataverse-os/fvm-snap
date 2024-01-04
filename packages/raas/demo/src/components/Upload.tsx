@@ -1,7 +1,9 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Wallet } from 'ethers';
-import { uploadToLightHouse } from '../utils';
-import { UploadButton } from './Buttons';
+import React, { ChangeEvent, useState } from "react";
+
+import { Wallet } from "ethers";
+
+import { UploadButton } from "./Buttons";
+import { uploadToLightHouse } from "../utils";
 
 type FileUploadComponentProps = {
   signer: Wallet;
@@ -11,7 +13,7 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
 }) => {
   const [fileData, setFileData] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<Blob | undefined>(undefined);
-  const [fileCid, setFileCid] = useState('');
+  const [fileCid, setFileCid] = useState("");
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -19,7 +21,7 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
     if (file) {
       const reader = new FileReader();
 
-      reader.onload = (e) => {
+      reader.onload = e => {
         const result = e.target?.result as string;
         setFileData(result);
       };
@@ -35,16 +37,16 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
         fileName: (file as Blob).name,
         blob: file as Blob,
       });
-      console.log('res: ', res);
+      console.log("res: ", res);
       setFileCid(res.data.Hash);
     } catch (e) {
-      console.log('e: ', e);
+      console.log("e: ", e);
     }
   };
 
   return (
     <div>
-      <input type="file" onChange={handleFileUpload} />
+      <input type='file' onChange={handleFileUpload} />
       {/* {fileData && <img src={fileData} alt="Uploaded File" />}*/}
       <UploadButton
         onClick={uploadFile}

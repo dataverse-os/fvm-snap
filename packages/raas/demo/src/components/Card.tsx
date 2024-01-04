@@ -1,5 +1,6 @@
-import React, { ReactElement, ReactNode } from 'react';
-import styled from 'styled-components';
+import React, { ReactElement, ReactNode } from "react";
+
+import styled from "styled-components";
 
 type CardProps = {
   content: {
@@ -15,7 +16,7 @@ type CardProps = {
 const CardWrapper = styled.div<{ fullWidth?: boolean; disabled: boolean }>`
   display: flex;
   flex-direction: column;
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : '250px')};
+  width: ${({ fullWidth }) => (fullWidth ? "100%" : "250px")};
   background-color: ${({ theme }) => theme.colors.card.default};
   margin-top: 2.4rem;
   margin-bottom: 2.4rem;
@@ -23,7 +24,7 @@ const CardWrapper = styled.div<{ fullWidth?: boolean; disabled: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.border.default};
   border-radius: ${({ theme }) => theme.radii.default};
   box-shadow: ${({ theme }) => theme.shadows.default};
-  filter: opacity(${({ disabled }) => (disabled ? '.4' : '1')});
+  filter: opacity(${({ disabled }) => (disabled ? ".4" : "1")});
   align-self: stretch;
   ${({ theme }) => theme.mediaQueries.small} {
     width: 100%;

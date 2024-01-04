@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { BigNumber, BytesLike } from 'ethers';
+import { BigNumber, BytesLike } from "ethers";
 
 export type SubmitOutput = {
   id: BigNumber;

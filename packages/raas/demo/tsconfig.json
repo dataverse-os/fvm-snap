@@ -3,10 +3,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": [
-      "DOM",
-      "ES2020"
-    ],
+    "lib": ["DOM", "ES2020"],
     "module": "esnext",
     "moduleResolution": "node",
     "useUnknownInCatchVariables": false,
@@ -18,12 +15,6 @@
     "noEmit": true,
     "jsx": "preserve"
   },
-  "exclude": [
-    "**/__snapshots__/**",
-    "**/test/**",
-    "**/*.test.ts"
-  ],
-  "include": [
-    "src"
-  ]
+  "exclude": ["**/__snapshots__/**", "**/test/**", "**/*.test.ts"],
+  "include": ["src"]
 }
