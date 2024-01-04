@@ -1,0 +1,38 @@
+{
+  "name": "@dataverse/fvm-raas-provider",
+  "version": "0.0.4",
+  "description": "",
+  "types": "dist/esm/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build:esm": "tsc -p tsconfig.json",
+    "build:cjs": "tsc -p tsconfig-cjs.json",
+    "build": "rimraf ./dist && pnpm build:esm && pnpm build:cjs",
+    "format": "prettier --config .prettierrc . --write",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  },
+  "dependencies": {
+    "@lighthouse-web3/sdk": "^0.2.8",
+    "axios": "^1.6.2",
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.2.1",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3",
+    "rimraf": "^5.0.5",
+    "typescript": "^4.6.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}

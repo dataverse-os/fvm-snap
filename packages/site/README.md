@@ -1,43 +1,62 @@
-# TypeScript Example Snap Front-end
+# Fvm-Snap Front-end
 
-This project was bootstrapped with [Gatsby](https://www.gatsbyjs.com/).
+## Introduction
 
-## Available Scripts
+This project is a React-based Snap front-end application. 
+The application uses modern web technologies such as React, Redux, and Vite to create a seamless and responsive user experience.
 
-In the project directory, you can run:
+## Technologies Used
 
-### `yarn start`
+The following technologies and libraries were used in the development of this
+application:
 
-Runs the app in the development mode.\
-Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
+- React 18
+- Redux 4
+- React Router 6
+- Vite 4
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Prerequisites
 
-### `yarn build`
+Before running the application, you will need to have the following software
+installed:
 
-Builds the app for production to the `public` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js (version 16 or higher)
+- pnpm (version 7 or higher)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Getting Started
 
-See the section about [deployment](https://www.gatsbyjs.com/docs/how-to/previews-deploys-hosting/) for more information.
+To get started with the application, follow these steps:
 
-## Environment variables
+1. Clone the repository to your local machine.
+2. Install the dependencies by running `pnpm install` or `npm install` or
+   `yarn`.
+3. Run the application by running `pnpm dev` or `npm dev` or `yarn dev`.
+4. Open [http://localhost:5173](http://localhost:5173) in your web browser.
 
-Gatsby has built-in support for loading environment variables into the browser and Functions. Loading environment variables into Node.js requires a small code snippet.
+## Build Project
 
-In development, Gatsby will load environment variables from a file named `.env.development`. For builds, it will load from `.env.production`.
+Build the application by running `pnpm build` or `npm build` or `yarn build`.
 
-By default you can use the `SNAP_ORIGIN` variable (used in `src/config/snap.ts`) to define a production origin for you snap (eg. `npm:MyPackageName`). If not defined it will defaults to `local:http://localhost:8080`.
+## Contributing
 
-A `.env` file template is available, to use it rename `.env.production.dist` to `.env.production`
+Contributions to this project are welcome. To contribute, please follow these steps:
 
-To learn more visit [Gatsby documentation](https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/)
+1. Fork the repository and create a new branch.
+2. Make your changes and test them thoroughly.
+3. Submit a pull request with a detailed description of your changes.
 
-## Learn More
+## License
 
-You can learn more in the [Gatsby documentation](https://www.gatsbyjs.com/docs/).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Acknowledgments
+
+The following libraries and resources were used in the development of this
+project:
+
+- [React](https://reactjs.org/)
+- [Redux](https://redux.js.org/)
+- [React Router](https://reactrouter.com/)
+- [Vite](https://vitejs.cn/)
+- [Node](https://nodejs.org/)
+- [pnpm](https://pnpm.io/)

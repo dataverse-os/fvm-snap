@@ -1,33 +1,18 @@
-import { FunctionComponent, ReactNode, useContext } from 'react';
-import styled from 'styled-components';
-import { Footer, Header } from './components';
+import React from "react";
 
-import { GlobalStyle } from './config/theme';
-import { ToggleThemeContext } from './Root';
+import { RouterProvider } from "react-router-dom";
+import "@arco-design/web-react/dist/css/arco.min.css";
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  max-width: 100vw;
-`;
+import { router } from "./router";
+import { Frame, GlobalStyle } from "./styled";
 
-export type AppProps = {
-  children: ReactNode;
-};
-
-export const App: FunctionComponent<AppProps> = ({ children }) => {
-  const toggleTheme = useContext(ToggleThemeContext);
-
+const App: React.FC = () => {
   return (
-    <>
+    <Frame>
       <GlobalStyle />
-      <Wrapper>
-        <Header handleToggleClick={toggleTheme} />
-        {children}
-        <Footer />
-      </Wrapper>
-    </>
+      <RouterProvider router={router} />
+    </Frame>
   );
 };
+
+export default App;
