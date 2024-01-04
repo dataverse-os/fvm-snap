@@ -27,6 +27,7 @@ export default defineConfig({
   define: {
     "process.env": {
       ENV: "Browser",
+      // SNAP_ORIGIN: "npm:fvm-snap",
     },
   },
 });

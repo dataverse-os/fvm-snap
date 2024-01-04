@@ -12,7 +12,7 @@
     "build": "npm run format && npm run lint:fix && lerna run build",
     "build:raas": "lerna run build --scope @dataverse/fvm-raas-provider",
     "install-chrome": "./scripts/install-chrome.sh",
-    "start": "pnpm --filter snap --filter site start",
+    "start": "pnpm --filter fvm-snap --filter fvm-site start",
     "format": "prettier --config .prettierrc . --write",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
